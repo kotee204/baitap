@@ -1,0 +1,73 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace baibuoi2
+{
+    class Student
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Create danh sach hoc sinh
+            List<Student> students = new List<Student>
+            {
+                new Student { Id = 1, Name = "An", Age = 16 },
+                new Student { Id = 2, Name = "Binh", Age = 18 },
+                new Student { Id = 3, Name = "Anh", Age = 15 },
+                new Student { Id = 4, Name = "Hoa", Age = 20 },
+                new Student { Id = 5, Name = "Nam", Age = 14 }
+            };
+
+            // a. In toan bo sanh sach sinh vien
+            Console.WriteLine("Danh sach toan bo sinn vien:");
+            foreach (var student in students)
+            {
+                Console.WriteLine($"Id: {student.Id}, Name: {student.Name}, Age: {student.Age}");
+            }
+
+            // b. Tim va in ra hoc sinh co tuoi tu 15 - 18
+            Console.WriteLine("\nHoc sinh co tuoi tu 15 - 18:");
+            var ageRangeStudents = students.Where(s => s.Age >= 15 && s.Age <= 18);
+            foreach (var student in ageRangeStudents)
+            {
+                Console.WriteLine($"Id: {student.Id}, Name: {student.Name}, Age: {student.Age}");
+            }
+
+            // c. Tim va in ra hoc sinh co ten bat dau bang chu "A"
+            Console.WriteLine("\nHoc sinh co ten bat dau bang chu  'A':");
+            var studentsWithNameA = students.Where(s => s.Name.StartsWith("A"));
+            foreach (var student in studentsWithNameA)
+            {
+                Console.WriteLine($"Id: {student.Id}, Name: {student.Name}, Age: {student.Age}");
+            }
+
+            // d. Tinh tong tuoi tat ca hoc sinh
+            int totalAge = students.Sum(s => s.Age);
+            Console.WriteLine($"\nTong tuoi cua tat ca hoc sinh: {totalAge}");
+
+            // e. Tim va in ra hoc sinh co tuoi lon nhat
+            int maxAge = students.Max(s => s.Age);
+            var oldestStudents = students.Where(s => s.Age == maxAge);
+            Console.WriteLine("\nHoc sinh co tuoi lon nhhat:");
+            foreach (var student in oldestStudents)
+                {
+                Console.WriteLine($"Id: {student.Id}, Name: {student.Name}, Age: {student.Age}");
+                }
+
+            // f. Sap xep danh sach theo tuoi tang dan
+            Console.WriteLine("\nDanh sacch hoc sinh theo tuoi tang dan:");
+            var sortedStudents = students.OrderBy(s => s.Age);
+            foreach (var student in sortedStudents)
+            {
+                Console.WriteLine($"Id: {student.Id}, Name: {student.Name}, Age: {student.Age}");
+            }
+        }
+    }
+}
