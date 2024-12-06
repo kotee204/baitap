@@ -1,0 +1,168 @@
+FORM CHÍNH :
+
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace baibuoi5
+{
+    public partial class ListViewForm : Form
+    {
+        private List<NhanVien> danhSachNhanVien;
+        public ListViewForm()
+        {
+            InitializeComponent();
+            danhSachNhanVien = new List<NhanVien>();
+            LoadData();
+        }
+        private void LoadData()
+        {
+            dataGridView1.DataSource = null; // delete binding cũ
+            dataGridView1.DataSource = danhSachNhanVien; // Gán ds new
+        }
+        private void btnThem_Click(object sender, EventArgs e)
+        {
+            NhanVienForm nhanVienForm = new NhanVienForm();
+            if (nhanVienForm.ShowDialog() == DialogResult.OK)
+            {
+                danhSachNhanVien.Add(nhanVienForm.NhanVien);
+                LoadData();
+            }
+        }
+
+        private void btnSua_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow != null)
+            {
+                var nhanVien = (NhanVien)dataGridView1.CurrentRow.DataBoundItem;
+                NhanVienForm nhanVienForm = new NhanVienForm(nhanVien);
+                if (nhanVienForm.ShowDialog() == DialogResult.OK)
+                {
+                    LoadData();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn một nhân viên để sửa.");
+            }
+        }
+
+        private void btnXoa_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow != null)
+            {
+                var nhanVien = (NhanVien)dataGridView1.CurrentRow.DataBoundItem;
+                danhSachNhanVien.Remove(nhanVien);
+                LoadData();
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn một nhân viên để xóa.");
+            }
+        }
+
+        private void btnDong_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
+}
+
+
+NHÂN VIÊN FROM :
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace baibuoi5
+{
+    public partial class NhanVienForm : Form
+    {
+        public NhanVien NhanVien { get; private set; }
+        public NhanVienForm()
+        {
+            InitializeComponent();
+            NhanVien = new NhanVien();
+        }
+        public NhanVienForm(NhanVien nhanVien) : this()
+        {
+            txtMSNV.Text = nhanVien.MSNV;
+            txtTenNV.Text = nhanVien.TenNV;
+            txtLuongCB.Text = nhanVien.LuongCB.ToString();
+            NhanVien = nhanVien;
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnBoQua_Click_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        private void btnDongY_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtMSNV.Text) ||
+                string.IsNullOrWhiteSpace(txtTenNV.Text) ||
+                !decimal.TryParse(txtLuongCB.Text, out decimal luongCB))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ và chính xác thông tin.");
+                return;
+            }
+            NhanVien.MSNV = txtMSNV.Text;
+            NhanVien.TenNV = txtTenNV.Text;
+            NhanVien.LuongCB = luongCB;
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+    }
+}
+
+
+PROGRAM:
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace baibuoi5
+{
+    public class NhanVien
+    {
+        public string MSNV { get; set; }
+        public string TenNV { get; set; }
+        public decimal LuongCB { get; set; }
+    }
+
+    internal static class Program
+    {
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new ListViewForm());
+        }
+    }
+}
